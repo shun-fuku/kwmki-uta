@@ -90,11 +90,11 @@
   </div>
 
   <script>
-    // ★歌詞データ★
-    const songs = [
-      // --- 数え唄 ---
-      {
-        category: "kazoe",
+    // ==========================================
+    // 1. 楽曲マスターデータ（歌詞・デフォルト情報を一括管理）
+    // ==========================================
+    const masterSongs = {
+      "kazoe": {
         title: "数え唄",
         subtitle: "一節心を込めまして",
         lyrics: `一節心を込めまして  
@@ -127,11 +127,8 @@
 その名も〇〇数え唄
         （番長）`
       },
-
-      // --- 2025年唄 ---
-      {
-        category: "2025",
-        title: "0.飲むっきゃないね",
+      "nomukkyanai": {
+        title: "飲むっきゃないね",
         subtitle: "神社–歌い回し",
         lyrics: `1.祭り男につかまった  
 (あーどっこい)
@@ -181,211 +178,84 @@
 飲むっきゃないね  
 歌えや踊れ  祭りだ騒げよ  秋祭り`
       },
-      // ★サブタイトルを押して「数え唄」に飛ぶ例★
-      { 
-        category: "2025", 
-        title: "1.青い果実", 
-        subtitle: "▶ <span class='link-badge' onclick='event.stopPropagation(); jumpToCategory(\"kazoe\")'>数え唄へ移動</span>", 
+      "aoi_kajitsu": {
+        title: "青い果実",
+        subtitle: "▶ <span class='link-badge' onclick='event.stopPropagation(); jumpToCategory(\"kazoe\")'>数え唄へ移動</span>",
         lyrics: `一節心を
-　　あーどっこい
+  あーどっこい
 込めまして
-　　あーどっこい
+  あーどっこい
 唄ってみましょう数え唄
-　　よっさい×3こーりゃ
+  よっさい×3こーりゃ
 二親ばかりか
-　　あーどっこい
+  あーどっこい
 兄弟も
-　　あーどっこい
+  あーどっこい
 あの日を限り捨てました
-　　よっさい×3こーりゃ
-大阪狭山　
-　　はいはい
+  よっさい×3こーりゃ
+大阪狭山 
+  はいはい
 川向の
-　　あーよっさいこーりゃはい
+  あーよっさいこーりゃはい
 だんじり秋祭り
-　　（よっさい×3こーりゃ）×2
+  （よっさい×3こーりゃ）×2
 短い命を惜しみなく惜しみなく
-　　あーどっこい
+  あーどっこい
 生きたいように生きて
-　　　　　　よっさいこーりゃしょい/
+      よっさいこーりゃしょい/
 生きて死ぬ
-　　（よっさい×3こーりゃ）×2しょい` 
+  （よっさい×3こーりゃ）×2しょい`
       },
-      { category: "2025", title: "2.青いダイヤモンド", subtitle: " ",
-       lyrics: `涙が流れてとまらない
-　　　　　　　よっさい×3こーりゃ×2
+      "aoi_diamond": {
+        title: "青いダイヤモンド",
+        subtitle: " ",
+        lyrics: `涙が流れてとまらない
+       よっさい×3こーりゃ×2
 明日がどこかもわからない
-　　　　　　　よっさい×3こーりゃ×2
-それでもいいさ
-　　　　　　　あーよっさいこーりゃはい
-想い出だけは
-　　　　　　　あーよっさいこーりゃはい
-けして消えたりは
-　　　　　　　はいはい
-しないから
-　　　　　　　よっさい×3こーりゃはいはい
-うちわ振り上げて
-　　　　　　　よっさいこーりゃはいはい
-声を張り上げる
-　　　　　　　よっさいこーりゃはいはい
-あぁ〜、祭りだね
-（一期一会だね）
-　　　　　　　（よっさい×3こーりゃ）×2
-涙に磨かれ
-（涙で滲んだ）
-　　　　　　　はいはいはい
-心は光るよ
-（提灯あかりは）
-　　　　　　　はいはいはい
-悲しみにあうたび
-（秋の町中を）
-　　　　　　　はいはい
-輝くよ
-（彩るよ）
-　　　　　　　（よっさい×3こーりゃ）×2
-
-どうして二人は出逢えたの
-どうして二人は別れるの
-いつかはきっとわかるのだろう
-それを運命と呼ぶのだろう
-団扇振り上げて
-声を張り上げる
-ダイヤモンドだね
-すべての時間は心に刻まれ
-宝物みたいに輝くよ` },         
-      { category: "2025", title: "3.赤い満月", subtitle: " ",
-       lyrics: `夜空に浮かんだ朧月（おぼろづき）
-　　　　　　　　あーどっこい
-男の心に　火を灯す
-　　　　　　　　あーどっこい
-河内平野に駒跡残し
-　　　　　　　　あーどっこい
-鳴り物響かせ　突き進む
-　　　　　　　よっさい×3こーりゃ
-夢に見て積み上げた　自慢の祭り
-　　　　　　　よっさい×3こーりゃ
-偽りのない この心
-                        あーどっこい
-抑えきれない
-　　　　　　　よっさい×3こーりゃ
-たとえ世間に背いても
-秋に散るなら
-             はいはい　【鳴り物3回】
-悔いはない
-　　　　　（よっさい×3こーりゃ）×2
-
-揃いの法被の　男衆が
-団扇を振り上げ　声枯らし
-祭り顔して汗を流して
-意地張る姿に　魅せられた
-男衆も舞姫も　唄えや騒げ
-夜道照らした灯火が
-河内を染める
-どんな苦難に出会っても
-秋に咲かせろ
-祭り華
-
-祭りを知らせる鳴り物が
-南河内に鳴り響く
-時に厳しい意見交わした
-河内で1番　獲るために
-若衆の根性を　見せつけてやれ
-よっしゃいこかの一声で
-命を懸ける
-祭りが終わるその日まで
-粋に咲かせる
-祭り華
-
-` },
-      { category: "2025", title: "4.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "5.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "6.", subtitle: " ", lyrics: `kasi` },
-      { category: "2025", title: "7.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "8.", subtitle: " ", lyrics: `kasi` },
-      { category: "2025", title: "9.", subtitle: " ", lyrics: `kasi` },
-      { category: "2025", title: "10.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "11.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "12.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "13.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "14.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "15.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "16.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "17.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "18.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "19.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "20.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "21.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "22.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "23.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "24.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "25.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "26.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "27.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "28.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "29.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "30.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "31.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "32.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "33.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "34.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "35.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "36.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "37.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2025", title: "38.", subtitle: " ", lyrics: `kasi` },
-
-      // --- 2026年唄 ---
-      {
-        category: "2026",
-        title: "1a.サンプル2026年唄",
-        subtitle: "2026年度版のタイトル",
-        lyrics: `（ここに2026年の歌詞を入力してください）`
+       よっさい×3こーりゃ×2
+（略）`
       },
-      { category: "2026", title: "2.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "3.b", subtitle: " ", lyrics: `kasi` },
-      { category: "2026", title: "4.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "5.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "6.a", subtitle: " ", lyrics: `kasi` },
-      { category: "2026", title: "7.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "8.a", subtitle: " ", lyrics: `kasi` },
-      { category: "2026", title: "9.a", subtitle: " ", lyrics: `kasi` },
-      { category: "2026", title: "10a.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "11a.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "12a.", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "13.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "14.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "15.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "16.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "17.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "18.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "19.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "20.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "21.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "22.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "23.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "24.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "25.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "26.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "27.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "28.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "29.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "30.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "31.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "32.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "33.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "34.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "35.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "36.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "37.a", subtitle: " ", lyrics: `kasi` },      
-      { category: "2026", title: "38.a", subtitle: " ", lyrics: `kasi` },
-
-      // --- 三拍子 ---
-      {
-        category: "sanbyoshi",
+      "akai_mangetsu": {
+        title: "赤い満月",
+        subtitle: " ",
+        lyrics: `夜空に浮かんだ朧月（おぼろづき）
+        あーどっこい
+男の心に 火を灯す
+（略）`
+      },
+      "sanbyoshi_sample": {
         title: "サンプル三拍子",
         subtitle: "三拍子の楽曲",
         lyrics: `（ここに三拍子の歌詞を入力してください）`
       }
-    ];
+    };
+
+    // ==========================================
+    // 2. 年度・カテゴリごとの曲順（プレイリスト）設定
+    // ==========================================
+    // songId: masterSongsのキーを指定
+    // num: その年での番号（例: "1.", "2a." など）
+    // subtitle: その年限定でサブタイトルを変えたい場合に指定（省略するとマスターの設定を使用）
+    const playlists = {
+      "kazoe": [
+        { songId: "kazoe" }
+      ],
+      "2025": [
+        { num: "0.", songId: "nomukkyanai" },
+        { num: "1.", songId: "aoi_kajitsu" },
+        { num: "2.", songId: "aoi_diamond" },
+        { num: "3.", songId: "akai_mangetsu" }
+      ],
+      "2026": [
+        // 2026年でも「青い果実」や「赤い満月」を再利用！
+        { num: "1a.", songId: "aoi_kajitsu" },
+        { num: "2a.", songId: "akai_mangetsu" },
+        { num: "3b.", songId: "nomukkyanai", subtitle: "2026年特別アレンジ" } // 2026年だけサブタイトルを変える例
+      ],
+      "sanbyoshi": [
+        { songId: "sanbyoshi_sample" }
+      ]
+    };
 
     // カテゴリ表示用のラベル定義
     const categoryNames = {
@@ -403,19 +273,32 @@
       // タイトル見出しを更新
       document.getElementById('page-title').innerText = categoryNames[category] || "唄一覧";
 
-      // 選択したカテゴリの曲のみ抽出＆数値の自然順でソート
-      const filteredSongs = songs
-        .filter(song => song.category === category)
-        .sort((a, b) => a.title.localeCompare(b.title, 'ja', { numeric: true }));
+      // 選択したカテゴリのリストを取得
+      const playlist = playlists[category] || [];
 
       // 一覧要素を追加
-      filteredSongs.forEach(song => {
+      playlist.forEach(item => {
+        const master = masterSongs[item.songId];
+        if (!master) return; // データが存在しない場合はスキップ
+
+        // 番号 + タイトル の表示形式を作る（番号指定がなければタイトルのみ）
+        const displayTitle = item.num ? `${item.num} ${master.title}` : master.title;
+        // 年度別サブタイトルがあればそちらを優先、なければマスターのサブタイトル
+        const displaySubtitle = item.subtitle !== undefined ? item.subtitle : master.subtitle;
+
         const li = document.createElement('li');
         li.className = 'song-item';
-        li.onclick = () => showDetail(song);
+        // クリック時に渡すデータを生成
+        const songData = {
+          title: displayTitle,
+          subtitle: displaySubtitle,
+          lyrics: master.lyrics
+        };
+        
+        li.onclick = () => showDetail(songData);
         li.innerHTML = `
-          <div class="song-title">${song.title}</div>
-          <div class="song-subtitle">${song.subtitle}</div>
+          <div class="song-title">${displayTitle}</div>
+          <div class="song-subtitle">${displaySubtitle}</div>
         `;
         container.appendChild(li);
       });
@@ -429,15 +312,23 @@
 
     // ★指定したカテゴリの最初の曲の詳細画面へ即座にジャンプする関数★
     function jumpToCategory(categoryKey) {
-      // ドロップダウンの選択状態も変更
       const selectElem = document.getElementById('category-select');
       selectElem.value = categoryKey;
       renderList(categoryKey);
 
-      // 対象カテゴリの最初の曲を取得して直接詳細画面を表示
-      const targetSong = songs.find(song => song.category === categoryKey);
-      if (targetSong) {
-        showDetail(targetSong);
+      const playlist = playlists[categoryKey];
+      if (playlist && playlist.length > 0) {
+        const firstItem = playlist[0];
+        const master = masterSongs[firstItem.songId];
+        if (master) {
+          const displayTitle = firstItem.num ? `${firstItem.num} ${master.title}` : master.title;
+          const displaySubtitle = firstItem.subtitle !== undefined ? firstItem.subtitle : master.subtitle;
+          showDetail({
+            title: displayTitle,
+            subtitle: displaySubtitle,
+            lyrics: master.lyrics
+          });
+        }
       }
     }
 
@@ -446,7 +337,6 @@
       document.getElementById('list-view').classList.add('hidden');
       document.getElementById('detail-view').classList.remove('hidden');
       document.getElementById('detail-title').innerText = song.title;
-      // HTMLタグが含まれている場合にも対応できるようにinnerHTMLに変更
       document.getElementById('detail-subtitle').innerHTML = song.subtitle;
       document.getElementById('detail-lyrics').innerText = song.lyrics;
       window.scrollTo(0, 0);
