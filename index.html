@@ -1747,8 +1747,8 @@
       const container = document.getElementById('song-container');
       container.innerHTML = "";
 
-      // タイトル順にソート
-      const songs = data[year].sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+      // 数字を自然な順序（1, 2... 9, 10, 11）でタイトルの並び替えを行う設定
+const songs = data[year].sort((a, b) => a.title.localeCompare(b.title, 'ja', { numeric: true }));
 
       songs.forEach(song => {
         const li = document.createElement('li');
