@@ -1,257 +1,116 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>祭り 唄一覧</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-      padding: 16px;
-    }
-    h1 { font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 8px; }
-    .item-list { list-style: none; padding: 0; margin: 0; }
-    .folder-item, .song-item {
-      padding: 16px 14px;
-      border-bottom: 1px solid #2a2a2a;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .folder-item:active, .song-item:active { background-color: #222; }
-    .folder-title { font-size: 19px; font-weight: bold; color: #ffffff; }
-    .song-title { font-size: 18px; font-weight: bold; color: #58a6ff; }
-    .song-subtitle { font-size: 13px; color: #8b949e; margin-top: 4px; }
-    .arrow { color: #8b949e; font-weight: bold; }
-    .back-button {
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #58a6ff;
-      font-size: 15px;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 16px;
-    }
-    .lyrics { font-size: 17px; line-height: 1.8; white-space: pre-wrap; margin-top: 16px; }
-    .hidden { display: none; }
-
-    /* 数え唄ボタンの見た目 */
-    .kazoe-link {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 4px 10px;
-      background-color: #238636;
-      color: #ffffff !important;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      text-decoration: none;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025年度 唄一覧</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+    }
+    h1 { font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+    .song-list { list-style: none; padding: 0; margin: 0; }
+    .song-item {
+      padding: 14px;
+      border-bottom: 1px solid #2a2a2a;
+      cursor: pointer;
+    }
+    .song-item:active { background-color: #222; }
+    .song-title { font-size: 18px; font-weight: bold; color: #58a6ff; }
+    .song-subtitle { font-size: 13px; color: #8b949e; margin-top: 4px; }
+    .back-button {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #58a6ff;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .lyrics { font-size: 17px; line-height: 1.8; white-space: pre-wrap; margin-top: 16px; }
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
 
-  <!-- 1. 年度を選択する画面 -->
-  <div id="year-view">
-    <h1>年度選択</h1>
-    <ul class="item-list" id="year-container"></ul>
-  </div>
+  <!-- 一覧画面 -->
+  <div id="list-view">
+    <h1>2025年度 唄</h1>
+    <ul class="song-list" id="song-container"></ul>
+  </div>
 
-  <!-- 2. 唄一覧画面 -->
-  <div id="list-view" class="hidden">
-    <button class="back-button" onclick="showYearList()">＜ 年度選択に戻る</button>
-    <h1 id="year-title"></h1>
-    <ul class="item-list" id="song-container"></ul>
-  </div>
+  <!-- 歌詞詳細画面 -->
+  <div id="detail-view" class="hidden">
+    <button class="back-button" onclick="showList()">＜ 唄一覧に戻る</button>
+    <h1 id="detail-title"></h1>
+    <div id="detail-subtitle" style="color: #8b949e; margin-top: -10px; margin-bottom: 16px;"></div>
+    <div class="lyrics" id="detail-lyrics"></div>
+  </div>
 
-  <!-- 3. 歌詞詳細画面 -->
-  <div id="detail-view" class="hidden">
-    <button class="back-button" onclick="showSongList()">＜ 唄一覧に戻る</button>
-    <h1 id="detail-title"></h1>
-    <div id="detail-subtitle" style="color: #8b949e; margin-top: -10px; margin-bottom: 16px;"></div>
-    <div class="lyrics" id="detail-lyrics"></div>
-  </div>
-
-  <script>
-    // ★年度ごとにデータを整理して管理します★
-    const data = {
-      "2025年度 唄": [
-        {
-          title: "0..飲むっきゃないね",
-          subtitle: "神社–歌い回し",
-          lyrics: `1.祭り男につかまった 
+  <script>
+    // ★ここに歌詞データを追加・編集していきます★
+    const songs = [
+      {
+        title: "0..飲むっきゃないね",
+        subtitle: "神社–歌い回し",
+        lyrics: `1.祭り男につかまった
 (あーどっこい)
-嘘はとっくにお見通し 
+嘘はとっくにお見通し
 (あーどっこい)
-祭りバカだと 叩いても 
+祭りバカだと叩いても
 (あーどっこい)
-きつく抱かれて また騙される 
-(よっさいこーら×3はい)
-祭り愛する 団長の顔 
-団扇片手に 振り上げる振り上げる 
-飲むっきゃないね 
-(はいはいはい)
-想いを繋ぐ 
-(あーよっさいこーらはい)
-村の宝が帰るまで 
-(あーよっさい×3こーら)
-飲むっきゃないね 
-(はいはいはい)
-はしゃいでみせる 
-(あーよっさいこーらはい)
-酔いどれ騒ぎの 秋祭り
-(よっさい×3こーら)×2
+きつく抱かれて また騙される
+(よっさいこーら×3 はい)
 
-2ちょっとぐらいは良いとこが 
-あるの知ってるあたしだけ 
-好いた祭りは命がけ 
-祭りバカだと 言われてみても 
-男貫く 想いをずっと 
-秋の夜空に 響かせる響かせる 
-飲むっきゃないね 
-じゃんじゃん飲んで 
-老いも若きも 声を出せ 
-飲むっきゃないね 
-歌えや踊れ 祭りだ騒げよ 秋祭り
+祭り愛する 団長の顔
+団扇片手に 振り上げる振り上げる
+飲むっきゃないね
+(はいはいはい)`
+      },
+      {
+        title: "0.数え唄",
+        subtitle: "一節心を込めまして",
+        lyrics: `（ここに数え唄の歌詞を入力してください）`
+      }
+    ];
 
-3.河内男に惚れちゃった 
-祭り3日の晴れ姿 
-魅せる姿につけこまれ 
-馬鹿を見るよと言われてみても 
-この日夢見た 少年からよ 
-苦労の日々を 
-乗り越える 乗り越える 
-飲むっきゃないね 
-祭りに生きる
-感謝 感謝を 忘れずに 
-飲むっきゃないね 
-歌えや踊れ 祭りだ騒げよ 秋祭り`
-        },
-        {
-          title: "0.数え唄",
-          subtitle: "",
-          lyrics: `一節心を込めまして 
-唄ってみましょう数え歌
+    // タイトル順に並び替え
+    songs.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
 
-二親ばかりか兄弟も 
-あの日を限りに捨てました
+    // 一覧画面の作成
+    const container = document.getElementById('song-container');
+    songs.forEach(song => {
+      const li = document.createElement('li');
+      li.className = 'song-item';
+      li.onclick = () => showDetail(song);
+      li.innerHTML = `
+        <div class="song-title">${song.title}</div>
+        <div class="song-subtitle">${song.subtitle}</div>
+      `;
+      container.appendChild(li);
+    });
 
-短い命を惜しみなく 
-生きたいように生きて死ぬ
+    // 詳細画面の表示
+    function showDetail(song) {
+      document.getElementById('list-view').classList.add('hidden');
+      document.getElementById('detail-view').classList.remove('hidden');
+      document.getElementById('detail-title').innerText = song.title;
+      document.getElementById('detail-subtitle').innerText = song.subtitle;
+      document.getElementById('detail-lyrics').innerText = song.lyrics;
+      window.scrollTo(0, 0);
+    }
 
-宜しく頼むと死んでった 
-兄貴の顔が目に浮かぶ
-
-いろはにほへとの理屈より 
-身体を張りましょ男なら
-
-虫けら呼ばわりされたって 
-辞められません秋祭り
-
-涙を噛んでる忍んでる
-堪忍袋は誰が切る
-
-やる時ゃ真っ先おれがやる 
-その後の責めもおれが負う
-
-今夜も星降れ涙降れ 
-恋しや河内の秋祭り
-とうとうここまで数え唄 
-その名も〇〇数え唄
-    （番長）`
-        },
-
-             ],
-      "2026年度 唄": [
-        {
-          title: "0..新曲のタイトル",
-          subtitle: "2026年のメモ",
-          lyrics: `（ここに2026年の歌詞を入力）`
-        }
-      ]
-    };
-
-    let currentYear = "";
-
-    // 初期化：年度一覧の描画
-    const yearContainer = document.getElementById('year-container');
-    Object.keys(data).forEach(year => {
-      const li = document.createElement('li');
-      li.className = 'folder-item';
-      li.onclick = () => showSongListByYear(year);
-      li.innerHTML = `<div class="folder-title">📁 ${year}</div><div class="arrow">＞</div>`;
-      yearContainer.appendChild(li);
-    });
-
-    // 年度を選択して唄一覧を表示
-    function showSongListByYear(year) {
-      currentYear = year;
-      document.getElementById('year-view').classList.add('hidden');
-      document.getElementById('detail-view').classList.add('hidden');
-      document.getElementById('list-view').classList.remove('hidden');
-      document.getElementById('year-title').innerText = year;
-
-      const container = document.getElementById('song-container');
-      container.innerHTML = "";
-
-      // 数字を自然な順序（1, 2... 9, 10, 11）でタイトルの並び替えを行う設定
-const songs = data[year].sort((a, b) => a.title.localeCompare(b.title, 'ja', { numeric: true }));
-
-      songs.forEach(song => {
-        const li = document.createElement('li');
-        li.className = 'song-item';
-        li.onclick = () => showDetail(song);
-        li.innerHTML = `
-          <div>
-            <div class="song-title">${song.title}</div>
-            <div class="song-subtitle">${song.subtitle}</div>
-          </div>
-          <div class="arrow">＞</div>
-        `;
-        container.appendChild(li);
-      });
-      window.scrollTo(0, 0);
-    }
-
-    // 歌詞詳細を表示
-    function showDetail(song) {
-      document.getElementById('list-view').classList.add('hidden');
-      document.getElementById('detail-view').classList.remove('hidden');
-      document.getElementById('detail-title').innerText = song.title;
-      document.getElementById('detail-subtitle').innerHTML = song.subtitle;
-      document.getElementById('detail-lyrics').innerText = song.lyrics;
-      window.scrollTo(0, 0);
-    }
-
-    // 「0.数え唄」へ直接移動する処理
-    function jumpToKazoe() {
-      const kazoeSong = data[currentYear].find(s => s.title.includes("数え唄"));
-      if (kazoeSong) {
-        showDetail(kazoeSong);
-      } else {
-        alert("この年度には『数え唄』が登録されていません。");
-      }
-    }
-
-    // 唄一覧へ戻る
-    function showSongList() {
-      document.getElementById('detail-view').classList.add('hidden');
-      document.getElementById('list-view').classList.remove('hidden');
-      window.scrollTo(0, 0);
-    }
-
-    // 年度選択へ戻る
-    function showYearList() {
-      document.getElementById('list-view').classList.add('hidden');
-      document.getElementById('year-view').classList.remove('hidden');
-      window.scrollTo(0, 0);
-    }
-  </script>
+    // 一覧画面に戻る
+    function showList() {
+      document.getElementById('detail-view').classList.add('hidden');
+      document.getElementById('list-view').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+  </script>
 </body>
 </html>
-
