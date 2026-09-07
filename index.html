@@ -58,12 +58,12 @@
 <body>
 
   <div id="list-view">
-    <h1 id="page-title">2025年 唄一覧</h1>
+    <h1 id="page-title">数え唄 一覧</h1>
     
     <!-- 唄選択メニュー -->
     <div class="selector-container">
       <select id="category-select" class="category-select" onchange="changeCategory()">
-        <option value="数え唄">数え唄</option>
+        <option value="kazoe">数え唄</option>
         <option value="2025">2025年唄</option>
         <option value="2026">2026年唄</option>
         <option value="sanbyoshi">三拍子</option>
@@ -81,13 +81,13 @@
   </div>
 
   <script>
-    // ★歌詞データ（categoryプロパティで分類します）★
+    // ★歌詞データ★
     const songs = [
-      // --- 2025年唄 ---
-            {
-        category: "数え唄",
+      // --- 数え唄 ---
+      {
+        category: "kazoe",
         title: "数え唄",
-        subtitle: "　",
+        subtitle: "一節心を込めまして",
         lyrics: `一節心を込めまして  
 唄ってみましょう数え歌
 
@@ -116,9 +116,10 @@
 恋しや河内の秋祭り
 とうとうここまで数え唄  
 その名も〇〇数え唄
-        （番長）
-`
+        （番長）`
       },
+
+      // --- 2025年唄 ---
       {
         category: "2025",
         title: "0..飲むっきゃないね",
@@ -169,14 +170,7 @@
 祭りに生きる
 感謝  感謝を  忘れずに  
 飲むっきゃないね  
-歌えや踊れ  祭りだ騒げよ  秋祭り
-`
-      },
-      {
-        category: "2025",
-        title: "0.数え唄",
-        subtitle: "一節心を込めまして",
-        lyrics: `（ここに2025年の数え唄の歌詞を入力してください）`
+歌えや踊れ  祭りだ騒げよ  秋祭り`
       },
 
       // --- 2026年唄 ---
@@ -198,7 +192,7 @@
 
     // カテゴリ表示用のラベル定義
     const categoryNames = {
-       "数え唄": "数え唄",
+      "kazoe": "数え唄 一覧",
       "2025": "2025年 唄一覧",
       "2026": "2026年 唄一覧",
       "sanbyoshi": "三拍子 一覧"
@@ -253,8 +247,8 @@
       window.scrollTo(0, 0);
     }
 
-    // 初期表示（デフォルトで2025年を表示）
-    renderList('2025');
+    // 初期表示（デフォルトで「数え唄」を表示）
+    renderList('kazoe');
   </script>
 </body>
 </html>
