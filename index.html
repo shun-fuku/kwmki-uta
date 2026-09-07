@@ -41,6 +41,15 @@
     .song-item:active { background-color: #222; }
     .song-title { font-size: 18px; font-weight: bold; color: #58a6ff; }
     .song-subtitle { font-size: 13px; color: #8b949e; margin-top: 4px; }
+    
+    /* サブタイトル内リンク用のスタイリング */
+    .link-badge {
+      display: inline-block;
+      color: #58a6ff;
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+
     .back-button {
       background: #21262d;
       border: 1px solid #30363d;
@@ -172,7 +181,13 @@
 飲むっきゃないね  
 歌えや踊れ  祭りだ騒げよ  秋祭り`
       },
-      { category: "2025", title: "1.", subtitle: " ", lyrics: `kasi` },
+      // ★サブタイトルを押して「数え唄」に飛ぶ例★
+      { 
+        category: "2025", 
+        title: "1.", 
+        subtitle: "▶ <span class='link-badge' onclick='event.stopPropagation(); jumpToCategory(\"kazoe\")'>数え唄へ移動</span>", 
+        lyrics: `kasi` 
+      },
       { category: "2025", title: "2.", subtitle: " ", lyrics: `kasi` },         
       { category: "2025", title: "3.", subtitle: " ", lyrics: `kasi` },
       { category: "2025", title: "4.", subtitle: " ", lyrics: `kasi` },      
@@ -268,12 +283,27 @@
       renderList(selectedCategory);
     }
 
+    // ★指定したカテゴリの最初の曲の詳細画面へ即座にジャンプする関数★
+    function jumpToCategory(categoryKey) {
+      // ドロップダウンの選択状態も変更
+      const selectElem = document.getElementById('category-select');
+      selectElem.value = categoryKey;
+      renderList(categoryKey);
+
+      // 対象カテゴリの最初の曲を取得して直接詳細画面を表示
+      const targetSong = songs.find(song => song.category === categoryKey);
+      if (targetSong) {
+        showDetail(targetSong);
+      }
+    }
+
     // 詳細画面の表示
     function showDetail(song) {
       document.getElementById('list-view').classList.add('hidden');
       document.getElementById('detail-view').classList.remove('hidden');
       document.getElementById('detail-title').innerText = song.title;
-      document.getElementById('detail-subtitle').innerText = song.subtitle;
+      // HTMLタグが含まれている場合にも対応できるようにinnerHTMLに変更
+      document.getElementById('detail-subtitle').innerHTML = song.subtitle;
       document.getElementById('detail-lyrics').innerText = song.lyrics;
       window.scrollTo(0, 0);
     }
