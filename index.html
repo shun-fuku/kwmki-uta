@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025年度 唄一覧</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+    }
+    h1 { font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+    .song-list { list-style: none; padding: 0; margin: 0; }
+    .song-item {
+      padding: 14px;
+      border-bottom: 1px solid #2a2a2a;
+      cursor: pointer;
+    }
+    .song-item:active { background-color: #222; }
+    .song-title { font-size: 18px; font-weight: bold; color: #58a6ff; }
+    .song-subtitle { font-size: 13px; color: #8b949e; margin-top: 4px; }
+    .back-button {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #58a6ff;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .lyrics { font-size: 17px; line-height: 1.8; white-space: pre-wrap; margin-top: 16px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- 一覧画面 -->
+  <div id="list-view">
+    <h1>2025年度 唄</h1>
+    <ul class="song-list" id="song-container"></ul>
+  </div>
+
+  <!-- 歌詞詳細画面 -->
+  <div id="detail-view" class="hidden">
+    <button class="back-button" onclick="showList()">＜ 唄一覧に戻る</button>
+    <h1 id="detail-title"></h1>
+    <div id="detail-subtitle" style="color: #8b949e; margin-top: -10px; margin-bottom: 16px;"></div>
+    <div class="lyrics" id="detail-lyrics"></div>
+  </div>
+
+  <script>
+    // ★ここに歌詞データを追加・編集していきます★
+    const songs = [
+      {
+        title: "0..飲むっきゃないね",
+        subtitle: "神社–歌い回し",
+        lyrics: `1.祭り男につかまった
+(あーどっこい)
+嘘はとっくにお見通し
+(あーどっこい)
+祭りバカだと叩いても
+(あーどっこい)
+きつく抱かれて また騙される
+(よっさいこーら×3 はい)
+
+祭り愛する 団長の顔
+団扇片手に 振り上げる振り上げる
+飲むっきゃないね
+(はいはいはい)`
+      },
+      {
+        title: "0.数え唄",
+        subtitle: "一節心を込めまして",
+        lyrics: `（ここに数え唄の歌詞を入力してください）`
+      }
+    ];
+
+    // タイトル順に並び替え
+    songs.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+
+    // 一覧画面の作成
+    const container = document.getElementById('song-container');
+    songs.forEach(song => {
+      const li = document.createElement('li');
+      li.className = 'song-item';
+      li.onclick = () => showDetail(song);
+      li.innerHTML = `
+        <div class="song-title">${song.title}</div>
+        <div class="song-subtitle">${song.subtitle}</div>
+      `;
+      container.appendChild(li);
+    });
+
+    // 詳細画面の表示
+    function showDetail(song) {
+      document.getElementById('list-view').classList.add('hidden');
+      document.getElementById('detail-view').classList.remove('hidden');
+      document.getElementById('detail-title').innerText = song.title;
+      document.getElementById('detail-subtitle').innerText = song.subtitle;
+      document.getElementById('detail-lyrics').innerText = song.lyrics;
+      window.scrollTo(0, 0);
+    }
+
+    // 一覧画面に戻る
+    function showList() {
+      document.getElementById('detail-view').classList.add('hidden');
+      document.getElementById('list-view').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+  </script>
+</body>
+</html>
