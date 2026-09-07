@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2025年度 唄一覧</title>
+  <title>唄一覧</title>
   <style>
     body {
       background-color: #121212;
@@ -12,7 +12,26 @@
       margin: 0;
       padding: 16px;
     }
-    h1 { font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+    h1 { font-size: 22px; margin-bottom: 16px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+    
+    /* 唄選択ドロップダウンのスタイル */
+    .selector-container {
+      margin-bottom: 20px;
+    }
+    .category-select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 16px;
+      background-color: #21262d;
+      color: #ffffff;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      outline: none;
+    }
+    .category-select:focus {
+      border-color: #58a6ff;
+    }
+
     .song-list { list-style: none; padding: 0; margin: 0; }
     .song-item {
       padding: 14px;
@@ -39,7 +58,17 @@
 <body>
 
   <div id="list-view">
-    <h1>2025年度 唄</h1>
+    <h1 id="page-title">2025年 唄一覧</h1>
+    
+    <!-- 唄選択メニュー -->
+    <div class="selector-container">
+      <select id="category-select" class="category-select" onchange="changeCategory()">
+        <option value="2025">2025年唄</option>
+        <option value="2026">2026年唄</option>
+        <option value="sanbyoshi">三拍子</option>
+      </select>
+    </div>
+
     <ul class="song-list" id="song-container"></ul>
   </div>
 
@@ -51,9 +80,11 @@
   </div>
 
   <script>
-    // ★ここに歌詞データを追加・編集していきます★
+    // ★歌詞データ（categoryプロパティで分類します）★
     const songs = [
+      // --- 2025年唄 ---
       {
+        category: "2025",
         title: "0..飲むっきゃないね",
         subtitle: "神社–歌い回し",
         lyrics: `1.祭り男につかまった
@@ -71,27 +102,67 @@
 (はいはいはい)`
       },
       {
+        category: "2025",
         title: "0.数え唄",
         subtitle: "一節心を込めまして",
-        lyrics: `（ここに数え唄の歌詞を入力してください）`
+        lyrics: `（ここに2025年の数え唄の歌詞を入力してください）`
+      },
+
+      // --- 2026年唄 ---
+      {
+        category: "2026",
+        title: "サンプル2026年唄",
+        subtitle: "2026年度版のタイトル",
+        lyrics: `（ここに2026年の歌詞を入力してください）`
+      },
+
+      // --- 三拍子 ---
+      {
+        category: "sanbyoshi",
+        title: "サンプル三拍子",
+        subtitle: "三拍子の楽曲",
+        lyrics: `（ここに三拍子の歌詞を入力してください）`
       }
     ];
 
-    // タイトル順に並び替え
-    songs.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+    // カテゴリ表示用のラベル定義
+    const categoryNames = {
+      "2025": "2025年 唄一覧",
+      "2026": "2026年 唄一覧",
+      "sanbyoshi": "三拍子 一覧"
+    };
 
-    // 一覧画面の作成
-    const container = document.getElementById('song-container');
-    songs.forEach(song => {
-      const li = document.createElement('li');
-      li.className = 'song-item';
-      li.onclick = () => showDetail(song);
-      li.innerHTML = `
-        <div class="song-title">${song.title}</div>
-        <div class="song-subtitle">${song.subtitle}</div>
-      `;
-      container.appendChild(li);
-    });
+    // リストの描画処理
+    function renderList(category) {
+      const container = document.getElementById('song-container');
+      container.innerHTML = ''; // 画面をクリア
+
+      // タイトル見出しを更新
+      document.getElementById('page-title').innerText = categoryNames[category] || "唄一覧";
+
+      // 選択したカテゴリの曲のみ抽出＆タイトル順ソート
+      const filteredSongs = songs
+        .filter(song => song.category === category)
+        .sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+
+      // 一覧要素を追加
+      filteredSongs.forEach(song => {
+        const li = document.createElement('li');
+        li.className = 'song-item';
+        li.onclick = () => showDetail(song);
+        li.innerHTML = `
+          <div class="song-title">${song.title}</div>
+          <div class="song-subtitle">${song.subtitle}</div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    // カテゴリ切り替え時イベント
+    function changeCategory() {
+      const selectedCategory = document.getElementById('category-select').value;
+      renderList(selectedCategory);
+    }
 
     // 詳細画面の表示
     function showDetail(song) {
@@ -109,6 +180,9 @@
       document.getElementById('list-view').classList.remove('hidden');
       window.scrollTo(0, 0);
     }
+
+    // 初期表示（デフォルトで2025年を表示）
+    renderList('2025');
   </script>
 </body>
 </html>
