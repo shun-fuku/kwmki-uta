@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2025年度 唄一覧</title>
+  <title>祭り 唄一覧</title>
   <style>
     body {
       background-color: #121212;
@@ -13,15 +13,20 @@
       padding: 16px;
     }
     h1 { font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 8px; }
-    .song-list { list-style: none; padding: 0; margin: 0; }
-    .song-item {
-      padding: 14px;
+    .item-list { list-style: none; padding: 0; margin: 0; }
+    .folder-item, .song-item {
+      padding: 16px 14px;
       border-bottom: 1px solid #2a2a2a;
       cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .song-item:active { background-color: #222; }
+    .folder-item:active, .song-item:active { background-color: #222; }
+    .folder-title { font-size: 19px; font-weight: bold; color: #ffffff; }
     .song-title { font-size: 18px; font-weight: bold; color: #58a6ff; }
     .song-subtitle { font-size: 13px; color: #8b949e; margin-top: 4px; }
+    .arrow { color: #8b949e; font-weight: bold; }
     .back-button {
       background: #21262d;
       border: 1px solid #30363d;
@@ -38,64 +43,299 @@
 </head>
 <body>
 
-  <!-- 一覧画面 -->
-  <div id="list-view">
-    <h1>2025年度 唄</h1>
-    <ul class="song-list" id="song-container"></ul>
+  <!-- 1. 年度を選択する画面 -->
+  <div id="year-view">
+    <h1>年度選択</h1>
+    <ul class="item-list" id="year-container"></ul>
   </div>
 
-  <!-- 歌詞詳細画面 -->
+  <!-- 2. 唄一覧画面 -->
+  <div id="list-view" class="hidden">
+    <button class="back-button" onclick="showYearList()">＜ 年度選択に戻る</button>
+    <h1 id="year-title"></h1>
+    <ul class="item-list" id="song-container"></ul>
+  </div>
+
+  <!-- 3. 歌詞詳細画面 -->
   <div id="detail-view" class="hidden">
-    <button class="back-button" onclick="showList()">＜ 唄一覧に戻る</button>
+    <button class="back-button" onclick="showSongList()">＜ 唄一覧に戻る</button>
     <h1 id="detail-title"></h1>
     <div id="detail-subtitle" style="color: #8b949e; margin-top: -10px; margin-bottom: 16px;"></div>
     <div class="lyrics" id="detail-lyrics"></div>
   </div>
 
   <script>
-    // ★ここに歌詞データを追加・編集していきます★
-    const songs = [
-      {
-        title: "0..飲むっきゃないね",
-        subtitle: "神社–歌い回し",
-        lyrics: `1.祭り男につかまった
+    // ★年度ごとにデータを整理して管理します★
+    const data = {
+      "2025年度 唄": [
+        {
+          title: "0..飲むっきゃないね",
+          subtitle: "神社–歌い回し",
+          lyrics: `1.祭り男につかまった 
 (あーどっこい)
-嘘はとっくにお見通し
+嘘はとっくにお見通し 
 (あーどっこい)
-祭りバカだと叩いても
+祭りバカだと 叩いても 
 (あーどっこい)
-きつく抱かれて また騙される
-(よっさいこーら×3 はい)
+きつく抱かれて また騙される 
+(よっさいこーら×3はい)
+祭り愛する 団長の顔 
+団扇片手に 振り上げる振り上げる 
+飲むっきゃないね 
+(はいはいはい)
+想いを繋ぐ 
+(あーよっさいこーらはい)
+村の宝が帰るまで 
+(あーよっさい×3こーら)
+飲むっきゃないね 
+(はいはいはい)
+はしゃいでみせる 
+(あーよっさいこーらはい)
+酔いどれ騒ぎの 秋祭り
+(よっさい×3こーら)×2
 
-祭り愛する 団長の顔
-団扇片手に 振り上げる振り上げる
-飲むっきゃないね
-(はいはいはい)`
+2ちょっとぐらいは良いとこが 
+あるの知ってるあたしだけ 
+好いた祭りは命がけ 
+祭りバカだと 言われてみても 
+男貫く 想いをずっと 
+秋の夜空に 響かせる響かせる 
+飲むっきゃないね 
+じゃんじゃん飲んで 
+老いも若きも 声を出せ 
+飲むっきゃないね 
+歌えや踊れ 祭りだ騒げよ 秋祭り
+
+3.河内男に惚れちゃった 
+祭り3日の晴れ姿 
+魅せる姿につけこまれ 
+馬鹿を見るよと言われてみても 
+この日夢見た 少年からよ 
+苦労の日々を 
+乗り越える 乗り越える 
+飲むっきゃないね 
+祭りに生きる
+感謝 感謝を 忘れずに 
+飲むっきゃないね 
+歌えや踊れ 祭りだ騒げよ 秋祭り`
+        },
+        {
+          title: "0.数え唄",
+          subtitle: "",
+          lyrics: `一節心を込めまして　
+唄ってみましょう数え歌
+
+二親ばかりか兄弟も　
+あの日を限りに捨てました
+
+短い命を惜しみなく　
+生きたいように生きて死ぬ
+
+宜しく頼むと死んでった　
+兄貴の顔が目に浮かぶ
+
+いろはにほへとの理屈より　
+身体を張りましょ男なら
+
+虫けら呼ばわりされたって　
+辞められません秋祭り
+
+涙を噛んでる忍んでる
+堪忍袋は誰が切る
+
+やる時ゃ真っ先おれがやる　
+その後の責めもおれが負う
+
+今夜も星降れ涙降れ　
+恋しや河内の秋祭り
+とうとうここまで数え唄　
+その名も〇〇数え唄
+　　　　（番長）`
+        },
+
+        
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
       },
-      {
-        title: "0.数え唄",
-        subtitle: "一節心を込めまして",
-        lyrics: `（ここに数え唄の歌詞を入力してください）`
-      }
-    ];
 
-    // タイトル順に並び替え
-    songs.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
 
-    // 一覧画面の作成
-    const container = document.getElementById('song-container');
-    songs.forEach(song => {
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        {
+        title: "タイトル（例: 1.青い果実）",
+        subtitle: "サブタイトルやメモ（例: ※数え唄）",
+        lyrics: `歌詞の本文を
+ここに書き込みます。
+改行もそのまま画面に反映されます。`
+      },
+
+        
+      ],
+      "2026年度 唄": [
+        {
+          title: "0..新曲のタイトル",
+          subtitle: "2026年のメモ",
+          lyrics: `（ここに2026年の歌詞を入力）`
+        }
+      ]
+    };
+
+    let currentYear = "";
+
+    // 初期化：年度一覧の描画
+    const yearContainer = document.getElementById('year-container');
+    Object.keys(data).forEach(year => {
       const li = document.createElement('li');
-      li.className = 'song-item';
-      li.onclick = () => showDetail(song);
-      li.innerHTML = `
-        <div class="song-title">${song.title}</div>
-        <div class="song-subtitle">${song.subtitle}</div>
-      `;
-      container.appendChild(li);
+      li.className = 'folder-item';
+      li.onclick = () => showSongListByYear(year);
+      li.innerHTML = `<div class="folder-title">📁 ${year}</div><div class="arrow">＞</div>`;
+      yearContainer.appendChild(li);
     });
 
-    // 詳細画面の表示
+    // 年度を選択して唄一覧を表示
+    function showSongListByYear(year) {
+      currentYear = year;
+      document.getElementById('year-view').classList.add('hidden');
+      document.getElementById('detail-view').classList.add('hidden');
+      document.getElementById('list-view').classList.remove('hidden');
+      document.getElementById('year-title').innerText = year;
+
+      const container = document.getElementById('song-container');
+      container.innerHTML = "";
+
+      // タイトル順にソート
+      const songs = data[year].sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+
+      songs.forEach(song => {
+        const li = document.createElement('li');
+        li.className = 'song-item';
+        li.onclick = () => showDetail(song);
+        li.innerHTML = `
+          <div>
+            <div class="song-title">${song.title}</div>
+            <div class="song-subtitle">${song.subtitle}</div>
+          </div>
+          <div class="arrow">＞</div>
+        `;
+        container.appendChild(li);
+      });
+      window.scrollTo(0, 0);
+    }
+
+    // 歌詞詳細を表示
     function showDetail(song) {
       document.getElementById('list-view').classList.add('hidden');
       document.getElementById('detail-view').classList.remove('hidden');
@@ -105,10 +345,17 @@
       window.scrollTo(0, 0);
     }
 
-    // 一覧画面に戻る
-    function showList() {
+    // 唄一覧へ戻る
+    function showSongList() {
       document.getElementById('detail-view').classList.add('hidden');
       document.getElementById('list-view').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    // 年度選択へ戻る
+    function showYearList() {
+      document.getElementById('list-view').classList.add('hidden');
+      document.getElementById('year-view').classList.remove('hidden');
       window.scrollTo(0, 0);
     }
   </script>
