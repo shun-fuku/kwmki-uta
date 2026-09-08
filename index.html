@@ -2310,31 +2310,12 @@
       });
     }
 
-        // カテゴリ切り替え時イベント
+     // カテゴリ切り替え時イベント
     function changeCategory() {
       const selectedCategory = document.getElementById('category-select').value;
-      const playlist = playlists[selectedCategory] || [];
-
-      // 該当カテゴリの曲が1曲だけの場合は、直接詳細画面（歌詞）を表示
-      if (playlist.length === 1) {
-        const item = playlist[0];
-        const master = masterSongs[item.songId];
-        if (master) {
-          const displayTitle = item.num ? `${item.num} ${master.title}` : master.title;
-          const displaySubtitle = item.subtitle !== undefined ? item.subtitle : master.subtitle;
-          
-          showDetail({
-            title: displayTitle,
-            subtitle: displaySubtitle,
-            lyrics: master.lyrics
-          });
-          return;
-        }
-      }
-
-      // 2曲以上ある場合は通常通り一覧を表示
       renderList(selectedCategory);
     }
+
 
     // ★指定したカテゴリの最初の曲の詳細画面へ即座にジャンプする関数★
     function jumpToCategory(categoryKey) {
